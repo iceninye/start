@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Apps Hub</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --subtext: #94a3b8;
+      --accent: #38bdf8;
+      --card-hover: #334155;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin-top: 80px;
+    }
+    header {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    p {
+      color: var(--subtext);
+      margin: 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease-in-out;
+    }
+    .card:hover {
+      background: var(--card-hover);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      margin: 0 0 8px 0;
+      color: var(--accent);
+    }
+    .card p {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Web Applications</h1>
+      <p>Personal Workspace & Dashboard</p>
+    </header>
+
+    <div class="grid">
+      <!-- App 1 -->
+      <a href="https://tml-traffic.iceninye.workers.dev/" class="card" target="_blank">
+        <h2>屯馬線交通資訊</h2>
+        <p>提供即時屯馬線列車到站時間與營運狀態監控。</p>
+      </a>
+
+      <!-- App 2 -->
+      <a href="https://your-second-app.workers.dev/" class="card" target="_blank">
+        <h2>第二個 App 名稱</h2>
+        <p>填寫此 App 的簡短功能簡介或說明。</p>
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
