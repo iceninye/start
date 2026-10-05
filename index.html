@@ -2,97 +2,362 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Apps Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Ice 嘅個人 Web Apps Hub — 港鐵實時到站、屯馬綫列車動態圖，純前端、零追蹤。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Ice Apps Hub">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <title>Ice Apps Hub</title>
   <style>
+    /* ===== Tokens ===== */
     :root {
+      color-scheme: dark light;
       --bg: #0f172a;
-      --card-bg: #1e293b;
-      --text: #f8fafc;
-      --subtext: #94a3b8;
-      --accent: #38bdf8;
+      --bg-grad-1: rgba(56, 189, 248, 0.08);
+      --bg-grad-2: rgba(168, 85, 247, 0.06);
+      --card: #1e293b;
       --card-hover: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-warm: #fb923c;
+      --accent-cool: #38bdf8;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(56, 189, 248, 0.5);
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+      --shadow-hover: 0 8px 32px rgba(56, 189, 248, 0.18);
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.35);
     }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --bg-grad-1: rgba(56, 189, 248, 0.10);
+        --bg-grad-2: rgba(168, 85, 247, 0.07);
+        --card: #ffffff;
+        --card-hover: #f1f5f9;
+        --text: #0f172a;
+        --muted: #64748b;
+        --border: rgba(15, 23, 42, 0.08);
+        --border-hover: rgba(56, 189, 248, 0.5);
+        --shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+        --shadow-hover: 0 8px 32px rgba(56, 189, 248, 0.18);
+      }
+    }
+
+    /* ===== Base ===== */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK",
+                   "Hiragino Sans GB", "Microsoft JhengHei", Roboto, sans-serif;
       background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 20% 0%, var(--bg-grad-1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 100%, var(--bg-grad-2) 0%, transparent 50%);
+      background-attachment: fixed;
       color: var(--text);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
     }
+
+    /* ===== Layout ===== */
     .container {
-      width: 90%;
-      max-width: 800px;
-      margin-top: 80px;
+      width: min(960px, 92%);
+      margin: 0 auto;
+      padding: clamp(48px, 10vh, 96px) 0 64px;
     }
-    header {
-      margin-bottom: 40px;
-      text-align: center;
-    }
+    header { margin-bottom: 56px; }
     h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
     }
-    p {
-      color: var(--subtext);
+    h1 .dot {
+      display: inline-block;
+      width: 0.5em; height: 0.5em;
+      border-radius: 50%;
+      background: var(--accent);
+      vertical-align: 0.1em;
+      margin-right: 0.3em;
+      box-shadow: 0 0 12px var(--accent);
+    }
+    header p {
+      color: var(--muted);
+      font-size: 1.05rem;
       margin: 0;
+      max-width: 60ch;
     }
+
+    /* ===== Grid ===== */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
+
+    /* ===== Card ===== */
     .card {
-      background: var(--card-bg);
-      padding: 24px;
-      border-radius: 12px;
+      position: relative;
+      display: block;
+      background: var(--card);
+      padding: 24px 24px 56px;
+      border-radius: 14px;
       text-decoration: none;
       color: inherit;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: all 0.2s ease-in-out;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.18s ease, box-shadow 0.18s ease,
+                  border-color 0.18s ease, background-color 0.18s ease;
+      overflow: hidden;
+      isolation: isolate;
     }
-    .card:hover {
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, var(--card-accent, var(--accent)) 200%);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      z-index: -1;
+    }
+    .card:hover, .card:focus-visible {
+      transform: translateY(-3px);
       background: var(--card-hover);
-      transform: translateY(-4px);
-      border-color: var(--accent);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-hover);
+      outline: none;
     }
-    .card h2 {
+    .card:hover::before, .card:focus-visible::before { opacity: 0.08; }
+    .card:focus-visible { box-shadow: var(--ring); }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .card-icon {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--card-accent-soft, rgba(56, 189, 248, 0.12));
+      color: var(--card-accent, var(--accent));
+      font-size: 22px;
+      line-height: 1;
+    }
+    .card[data-accent="warm"] {
+      --card-accent: var(--accent-warm);
+      --card-accent-soft: rgba(251, 146, 60, 0.12);
+    }
+    .card[data-accent="cool"] {
+      --card-accent: var(--accent-cool);
+      --card-accent-soft: rgba(56, 189, 248, 0.12);
+    }
+
+    .card-title {
       font-size: 1.25rem;
-      margin: 0 0 8px 0;
+      font-weight: 650;
+      margin: 4px 0 0;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .card-tagline {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.5;
+    }
+    .card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .card-features li {
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      background: var(--card-accent-soft);
+      color: var(--card-accent);
+      border-radius: 999px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .card-foot {
+      position: absolute;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .card-version {
+      font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.75rem;
+      background: var(--card-accent-soft);
+      color: var(--card-accent);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--card-accent);
+      font-weight: 500;
+      transition: gap 0.18s ease;
+    }
+    .card:hover .card-cta, .card:focus-visible .card-cta { gap: 8px; }
+
+    /* ===== Footer ===== */
+    .foot {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: center;
+    }
+    .foot a { color: inherit; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+    .foot-clock {
+      font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.82rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.10);
       color: var(--accent);
     }
-    .card p {
-      font-size: 0.9rem;
-      line-height: 1.4;
+
+    /* ===== Reduced motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
+  <main class="container">
     <header>
-      <h1>Web Applications</h1>
-      <p>Personal Workspace & Dashboard</p>
+      <h1><span class="dot" aria-hidden="true"></span>Ice Apps Hub</h1>
+      <p>個人 Web Apps 入口 — 全部純前端、零追蹤、公開資料直接由瀏覽器查詢。</p>
     </header>
 
-    <div class="grid">
-      <!-- App 1 -->
-      <a href="https://tml-traffic.iceninye.workers.dev/" class="card" target="_blank">
-        <h2>屯馬線交通資訊</h2>
-        <p>提供即時屯馬線列車到站時間與營運狀態監控。</p>
+    <section class="grid" aria-label="應用程式清單">
+
+      <a class="card" data-accent="warm"
+         href="https://tml-traffic.iceninye.workers.dev/"
+         target="_blank" rel="noopener noreferrer">
+        <div class="card-head">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="3" width="14" height="14" rx="3"/>
+              <path d="M5 11h14"/>
+              <circle cx="9" cy="14" r="1"/>
+              <circle cx="15" cy="14" r="1"/>
+              <path d="M7 21l2-4M17 21l-2-4"/>
+            </svg>
+          </div>
+          <h2 class="card-title">屯馬綫列車動態圖</h2>
+        </div>
+        <p class="card-tagline">
+          27 站雙軌實時路綫圖 + MapLibre 地圖。港鐵冇公開列車位置，由各站到站倒數配合時間表反推。
+        </p>
+        <ul class="card-features">
+          <li>雙軌 SVG</li>
+          <li>地圖視圖</li>
+          <li>點列車跟隨</li>
+          <li>繁/EN</li>
+          <li>PWA 離線</li>
+        </ul>
+        <div class="card-foot">
+          <span class="card-version">v0.4.4</span>
+          <span class="card-cta">前往 →</span>
+        </div>
       </a>
 
-      <!-- App 2 -->
-      <a href="https://mtr-app.iceninye.workers.dev/" class="card" target="_blank">
-        <h2>港鐵實時到站資訊</h2>
-        <p>填寫此 App 的簡短功能簡介或說明。</p>
+      <a class="card" data-accent="cool"
+         href="https://mtr-app.iceninye.workers.dev/"
+         target="_blank" rel="noopener noreferrer">
+        <div class="card-head">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="6" r="2"/>
+              <circle cx="18" cy="6" r="2"/>
+              <circle cx="6" cy="18" r="2"/>
+              <circle cx="18" cy="18" r="2"/>
+              <path d="M8 6h8M6 8v8M18 8v8M8 18h8"/>
+            </svg>
+          </div>
+          <h2 class="card-title">港鐵實時到站資訊</h2>
+        </div>
+        <p class="card-tagline">
+          10 條港鐵綫 + 輕鐵全網絡實時到站倒數。GPS 自動揀最近車站，三色主題、繁/EN、完整 PWA。
+        </p>
+        <ul class="card-features">
+          <li>10 條 MTR</li>
+          <li>輕鐵 68 站</li>
+          <li>GPS 定位</li>
+          <li>三色主題</li>
+          <li>繁/EN</li>
+        </ul>
+        <div class="card-foot">
+          <span class="card-version">v52.8.1</span>
+          <span class="card-cta">前往 →</span>
+        </div>
       </a>
-    </div>
-  </div>
 
+    </section>
+
+    <footer class="foot">
+      <span class="foot-clock" id="clock" aria-label="香港時間">--:--:-- HKT</span>
+      <span class="foot-links">
+        <a href="https://github.com/iceninye" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/iceninye/start" target="_blank" rel="noopener noreferrer">本站原始碼</a>
+      </span>
+      <span>資料來源：<a href="https://data.gov.hk" target="_blank" rel="noopener noreferrer">data.gov.hk</a></span>
+    </footer>
+  </main>
+
+  <script>
+    // Live HKT clock — pure cosmetic, no deps
+    (function () {
+      var el = document.getElementById("clock");
+      if (!el) return;
+      function tick() {
+        var d = new Date();
+        var pad = function (n) { return n < 10 ? "0" + n : "" + n; };
+        var h = pad(d.getHours()), m = pad(d.getMinutes()), s = pad(d.getSeconds());
+        el.textContent = h + ":" + m + ":" + s + " HKT";
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 </body>
 </html>
